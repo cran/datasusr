@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Comparison with healthbR and microdatasus</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Comparison with healthbR and
+microdatasus</h1>
+
+
+
+<p><code>datasusr</code> is one of several R packages that pull
+Brazilian public health data into the tidyverse. This article compares
+it with the two most relevant alternatives so that you can pick the
+right tool — and, in many cases, that tool will <em>not</em> be
+<code>datasusr</code>.</p>
+<ul>
+<li><a href="https://github.com/SidneyBissoli/healthbR"><code>healthbR</code></a>
+(Sidney Bissoli): modern, broad-scope toolkit covering DATASUS
+<em>and</em> IBGE surveys, primary-care indicators, ANS, and ANVISA,
+with module-specific helpers, variable dictionaries, parallel downloads,
+and Parquet caching.</li>
+<li><a href="https://github.com/rfsaldanha/microdatasus"><code>microdatasus</code></a>
+(Saldanha, Bastos &amp; Barcellos, 2019): the original
+tidyverse-friendly DATASUS reader, with rich <code>process_*()</code>
+functions for variable labelling. Currently archived on CRAN.</li>
+</ul>
+<div id="tldr-when-to-use-what" class="section level2">
+<h2>TL;DR — when to use what</h2>
+<p><strong>Reach for <code>healthbR</code> first</strong> when you want
+analysis-ready data and your question spans more than the DATASUS FTP.
+It covers VIGITEL, PNS, PNAD Contínua, POF, Censo, SI-PNI (microdata
+2020+), SISAB, ANS, and ANVISA in addition to
+SIM/SINASC/SIH/SIA/SINAN/CNES, exposes a uniform
+<code>&lt;module&gt;_data()</code> /
+<code>&lt;module&gt;_variables()</code> /
+<code>&lt;module&gt;_dictionary()</code> API, filters by ICD-10 prefix
+at the call site, parallelises downloads via
+<code>future</code>/<code>furrr</code>, and caches as Parquet via
+<code>arrow</code>. For most applied public-health analyses this is the
+most productive starting point.</p>
+<p><strong>Use <code>datasusr</code></strong> when you specifically need
+a small, fast, dependency-light reader for raw DBC files from the
+DATASUS FTP, a persistent on-disk cache with age/size pruning, or
+low-level access to the FTP catalog (custom paths, custom file types,
+custom column types). It does <em>not</em> try to replace
+<code>healthbR</code>’s breadth or <code>microdatasus</code>’s
+variable-labelling features — it stays focused on fast I/O and the
+FTP.</p>
+<p><strong>Use <code>microdatasus</code></strong> when you want its
+<code>process_sim()</code> / <code>process_sinasc()</code> / etc.
+labelling pipelines for SIM/SINASC/SIH/SIA/CNES and a select set of
+SINAN diseases, in a workflow you already know.</p>
+</div>
+<div id="feature-comparison" class="section level2">
+<h2>Feature comparison</h2>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Feature</th>
+<th>datasusr</th>
+<th>healthbR</th>
+<th>microdatasus</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Data sources</strong></td>
+<td>DATASUS FTP only (18 systems catalogued)</td>
+<td>DATASUS FTP + IBGE surveys + SISAB + ANS + ANVISA</td>
+<td>DATASUS FTP only (~15 systems)</td>
+</tr>
+<tr class="even">
+<td><strong>Survey microdata</strong> (VIGITEL, PNS, PNAD-C, POF,
+Censo)</td>
+<td>No</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr class="odd">
+<td><strong>Regulatory data</strong> (ANS, ANVISA)</td>
+<td>No</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr class="even">
+<td><strong>Primary-care indicators</strong> (SISAB)</td>
+<td>No</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr class="odd">
+<td><strong>DBC reading</strong></td>
+<td>In-memory C parser (bundled <code>blast</code>)</td>
+<td>Vendored C decompressor</td>
+<td>External <code>read.dbc</code></td>
+</tr>
+<tr class="even">
+<td><strong>Module-specific API</strong></td>
+<td>No (one generic <code>datasus_fetch()</code>)</td>
+<td>Yes (<code>sim_data()</code>, <code>sih_data()</code>, …)</td>
+<td>Yes (<code>fetch_datasus(information_system = &quot;SIH-RD&quot;)</code>)</td>
+</tr>
+<tr class="odd">
+<td><strong>Variable dictionaries / labels</strong></td>
+<td>No (raw fields)</td>
+<td>Yes (<code>*_variables()</code>, <code>*_dictionary()</code>)</td>
+<td>Yes (<code>process_*()</code> family)</td>
+</tr>
+<tr class="even">
+<td><strong>Filter by ICD-10 prefix</strong></td>
+<td>No (post-hoc with <code>dplyr</code>)</td>
+<td>Yes (<code>cause = &quot;I&quot;</code>, <code>diagnosis = &quot;J&quot;</code>)</td>
+<td>No</td>
+</tr>
+<tr class="odd">
+<td><strong>Parallel downloads</strong></td>
+<td><code>curl::multi_download</code> (sequential per call)</td>
+<td><code>future</code> / <code>furrr</code> plans</td>
+<td>Sequential</td>
+</tr>
+<tr class="even">
+<td><strong>Caching</strong></td>
+<td>Persistent on disk, configurable, with <code>prune</code> by
+age/size</td>
+<td>Per-module Parquet cache (via <code>arrow</code>) with
+<code>*_cache_status()</code></td>
+<td>Session-level temp files</td>
+</tr>
+<tr class="odd">
+<td><strong>Cache opt-in</strong></td>
+<td>tempdir() default, persistent only on opt-in</td>
+<td>Per-module helpers</td>
+<td>None</td>
+</tr>
+<tr class="even">
+<td><strong>Column selection at read</strong></td>
+<td>Yes (<code>select</code>)</td>
+<td>Module-dependent</td>
+<td>Yes (<code>vars</code>)</td>
+</tr>
+<tr class="odd">
+<td><strong>Type control at read</strong></td>
+<td>Yes (<code>col_types</code>, <code>guess_types</code>)</td>
+<td>No</td>
+<td>No</td>
+</tr>
+<tr class="even">
+<td><strong>Date parsing at read</strong></td>
+<td>Yes (<code>parse_dates</code>)</td>
+<td>Module-dependent</td>
+<td>Via <code>process_*()</code></td>
+</tr>
+<tr class="odd">
+<td><strong>Return type</strong></td>
+<td>Tibble, snake_case by default</td>
+<td>Tibble, snake_case</td>
+<td>Data frame → tibble after <code>process_*()</code></td>
+</tr>
+<tr class="even">
+<td><strong>CRAN status</strong></td>
+<td>This submission</td>
+<td>On CRAN</td>
+<td>Archived</td>
+</tr>
+<tr class="odd">
+<td><strong>Dependencies</strong></td>
+<td>cli, curl, dplyr, purrr, rlang, stringr, tibble, tidyr</td>
+<td>+ readr, jsonlite, foreign (Imports); arrow, furrr, future, survey,
+srvyr (Suggests)</td>
+<td>foreign, read.dbc (archived)</td>
+</tr>
+<tr class="even">
+<td><strong>License</strong></td>
+<td>MIT</td>
+<td>MIT</td>
+<td>MIT</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="reading-dbc-files" class="section level2">
+<h2>Reading DBC files</h2>
+<p>All three packages ultimately rely on Mark Adler’s <code>blast</code>
+decompressor for the PKWare DCL format used by DATASUS. The differences
+are in <em>how</em> the decompressed data is materialised in R:</p>
+<ul>
+<li><strong><code>microdatasus</code></strong> delegates to the
+<code>read.dbc</code> package, which writes a temporary
+<code>.dbf</code> file and parses it with
+<code>foreign::read.dbf()</code>. All numeric fields become
+<code>double</code>.</li>
+<li><strong><code>healthbR</code></strong> vendors its own C
+decompressor and parses fields into tidy tibbles per module. Each
+<code>&lt;module&gt;_data()</code> call applies the module’s specific
+cleaning/labelling rules.</li>
+<li><strong><code>datasusr</code></strong> decompresses and parses
+entirely in memory in a single C call. The compressed payload goes
+straight to a memory buffer and is parsed field-by-field into
+pre-allocated R vectors, with optional column selection,
+integer-vs-double inference, explicit <code>col_types</code>, and date
+parsing — all at the C level. There are no temporary files on disk.</li>
+</ul>
+<p>For a single large DBC file with column selection,
+<code>datasusr</code> is the fastest option. For a multi-source analysis
+touching surveys and DATASUS together, <code>healthbR</code>’s
+integrated workflow saves more wall time than the per-file speedup is
+worth.</p>
+</div>
+<div id="api-ergonomics" class="section level2">
+<h2>API ergonomics</h2>
+<p><code>healthbR</code> provides a uniform per-module API:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(healthbR)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>obitos    <span class="ot">&lt;-</span> <span class="fu">sim_data</span>(<span class="at">year =</span> <span class="dv">2022</span>, <span class="at">uf =</span> <span class="st">&quot;AC&quot;</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>obitos_cv <span class="ot">&lt;-</span> <span class="fu">sim_data</span>(<span class="at">year =</span> <span class="dv">2022</span>, <span class="at">uf =</span> <span class="st">&quot;AC&quot;</span>, <span class="at">cause =</span> <span class="st">&quot;I&quot;</span>)  <span class="co"># ICD-10 prefix</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>nascidos  <span class="ot">&lt;-</span> <span class="fu">sinasc_data</span>(<span class="at">year =</span> <span class="dv">2022</span>, <span class="at">uf =</span> <span class="st">&quot;AC&quot;</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>intern    <span class="ot">&lt;-</span> <span class="fu">sih_data</span>(<span class="at">year =</span> <span class="dv">2022</span>, <span class="at">month =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">uf =</span> <span class="fu">c</span>(<span class="st">&quot;SP&quot;</span>, <span class="st">&quot;RJ&quot;</span>))</span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>ambul     <span class="ot">&lt;-</span> <span class="fu">sia_data</span>(<span class="at">year =</span> <span class="dv">2022</span>, <span class="at">month =</span> <span class="dv">1</span>, <span class="at">uf =</span> <span class="st">&quot;AC&quot;</span>, <span class="at">type =</span> <span class="st">&quot;AM&quot;</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a><span class="co"># Variable metadata and value labels</span></span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a><span class="fu">sim_variables</span>()</span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a><span class="fu">sim_dictionary</span>(<span class="st">&quot;SEXO&quot;</span>)</span></code></pre></div>
+<p><code>datasusr</code> is intentionally one level lower. There is a
+single <code>datasus_fetch()</code> entry point, plus a layered API that
+exposes the catalog and the FTP:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">library</span>(datasusr)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co"># Browse the catalog</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="fu">datasus_sources</span>()</span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="fu">datasus_file_types</span>(<span class="at">source =</span> <span class="st">&quot;SINAN&quot;</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co"># Validate availability against the FTP</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>files <span class="ot">&lt;-</span> <span class="fu">datasus_list_files</span>(</span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a>  <span class="at">source =</span> <span class="st">&quot;SINAN&quot;</span>, <span class="at">file_type =</span> <span class="st">&quot;DENG&quot;</span>,</span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a>  <span class="at">year   =</span> <span class="dv">2020</span><span class="sc">:</span><span class="dv">2024</span></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a>)</span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="co"># Download with caching</span></span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a>downloads <span class="ot">&lt;-</span> <span class="fu">datasus_download</span>(files, <span class="at">cache_dir =</span> <span class="fu">tempdir</span>())</span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="co"># Read with column selection and explicit types</span></span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read_datasus_dbc</span>(</span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a>  downloads<span class="sc">$</span>local_file[[<span class="dv">1</span>]],</span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a>  <span class="at">select      =</span> <span class="fu">c</span>(<span class="st">&quot;dt_notific&quot;</span>, <span class="st">&quot;id_municip&quot;</span>, <span class="st">&quot;classi_fin&quot;</span>),</span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a>  <span class="at">col_types   =</span> <span class="fu">c</span>(<span class="at">dt_notific =</span> <span class="st">&quot;date&quot;</span>),</span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a>  <span class="at">parse_dates =</span> <span class="cn">TRUE</span></span>
+<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a>)</span></code></pre></div>
+<p>If you do not need that level of control,
+<code>datasus_fetch()</code> collapses the four steps above into one
+call, similar to <code>healthbR</code>’s
+<code>&lt;module&gt;_data()</code>.</p>
+</div>
+<div id="caching-and-parallelism" class="section level2">
+<h2>Caching and parallelism</h2>
+<p><code>healthbR</code> writes per-module Parquet files (when
+<code>arrow</code> is installed) and exposes per-module cache helpers
+(<code>sim_cache_status()</code>, <code>sih_clear_cache()</code>, …).
+Parallel downloads are opt-in via a <code>future</code> plan, so a
+single call can pull many UFs/months/years at once.</p>
+<p><code>datasusr</code> keeps the cache as raw <code>.dbc</code> files
+in a single configurable directory (default: a session-scoped
+subdirectory of <code>tempdir()</code>). Pruning is global rather than
+per-module:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">datasus_cache_info</span>()</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="fu">datasus_cache_prune</span>(<span class="at">older_than_days =</span> <span class="dv">90</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="fu">datasus_cache_prune</span>(<span class="at">max_size_bytes  =</span> <span class="dv">5</span> <span class="sc">*</span> <span class="dv">1024</span><span class="sc">^</span><span class="dv">3</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="fu">datasus_cache_clear</span>()</span></code></pre></div>
+<p>If you want a persistent cross-session cache, point
+<code>cache_dir</code> (or the <code>DATASUSR_CACHE_DIR</code> env var,
+or the <code>datasusr.cache_dir</code> option) at a directory of your
+choice, e.g. <code>tools::R_user_dir(&quot;datasusr&quot;, &quot;cache&quot;)</code>.</p>
+<p><code>datasusr</code> does not bundle a parallel-download
+abstraction, but <code>datasus_list_files()</code> returns a tibble of
+URLs that you can hand to <code>curl::multi_download()</code> or your
+own <code>future_map()</code> if you need parallel I/O.</p>
+</div>
+<div id="variable-labelling" class="section level2">
+<h2>Variable labelling</h2>
+<p>Neither <code>datasusr</code> nor base R itself attaches semantic
+labels to DATASUS variables. <code>healthbR</code> and
+<code>microdatasus</code> both do, with different styles:</p>
+<ul>
+<li><code>healthbR</code>: per-module <code>*_variables()</code> and
+<code>*_dictionary()</code> return tibbles describing each field and its
+categorical levels.</li>
+<li><code>microdatasus</code>: <code>process_sim()</code>,
+<code>process_sinasc()</code>, … rewrite the data frame in place with
+decoded values.</li>
+</ul>
+<p>If you start in <code>datasusr</code>, you can join against the
+territorial tables to recover human-readable municipality / region
+names, but ICD codes, sex codes, race codes, etc. remain raw:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>mun <span class="ot">&lt;-</span> <span class="fu">datasus_get_territory</span>(<span class="st">&quot;tb_municip&quot;</span>, <span class="at">cache_dir =</span> <span class="fu">tempdir</span>())</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">datasus_fetch</span>(</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>  <span class="at">source =</span> <span class="st">&quot;SIM&quot;</span>, <span class="at">file_type =</span> <span class="st">&quot;DO&quot;</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>  <span class="at">year =</span> <span class="dv">2022</span>, <span class="at">uf =</span> <span class="st">&quot;PE&quot;</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>  <span class="at">cache_dir =</span> <span class="fu">tempdir</span>()</span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a>  <span class="fu">left_join</span>(</span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>    <span class="fu">select</span>(mun, co_municip, ds_nome),</span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;codmunocor&quot;</span> <span class="ot">=</span> <span class="st">&quot;co_municip&quot;</span>)</span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a>  )</span></code></pre></div>
+<p>For analyses where labelled variables matter, prefer
+<code>healthbR</code> (or <code>microdatasus</code>’s
+<code>process_*()</code> family).</p>
+</div>
+<div id="composing-the-packages" class="section level2">
+<h2>Composing the packages</h2>
+<p>The packages are not mutually exclusive. A common pattern:</p>
+<ul>
+<li>Use <code>healthbR</code> as the default entry point for surveys and
+labelled DATASUS data.</li>
+<li>Drop down to <code>datasusr</code> when you need fast custom reads
+of arbitrary DBC files, or when you want to navigate the FTP catalog
+directly (<code>datasus_ftp_ls()</code>,
+<code>datasus_list_files()</code>,
+<code>datasus_docs_url()</code>).</li>
+<li>Reach for <code>microdatasus::process_*()</code> if you already rely
+on its labelling pipelines.</li>
+</ul>
+</div>
+<div id="summary" class="section level2">
+<h2>Summary</h2>
+<p><code>healthbR</code> is the most complete and currently the most
+actively maintained option for Brazilian public health data in R, and is
+the recommended starting point for most users. <code>datasusr</code> is
+a focused DATASUS-FTP reader and catalog tool: it shines when you need
+fast, flexible, dependency-light I/O against raw DBC files, but it does
+not try to match <code>healthbR</code>’s scope.</p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
