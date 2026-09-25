@@ -24,6 +24,8 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 
 ## ----eval = FALSE-------------------------------------------------------------
 # datasus_download(files, refresh = TRUE)
+# 
+# datasus_fetch("SIM", "DO", year = 2022, uf = "PE", refresh = TRUE)
 
 ## ----eval = FALSE-------------------------------------------------------------
 # # Remove files older than 90 days
