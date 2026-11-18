@@ -430,7 +430,7 @@ Censo)</td>
 </tr>
 <tr class="odd">
 <td><strong>DBC reading</strong></td>
-<td>In-memory C parser (bundled <code>blast</code>)</td>
+<td>In-memory Rust parser (bundled port of <code>blast</code>)</td>
 <td>Vendored C decompressor</td>
 <td>External <code>read.dbc</code></td>
 </tr>
@@ -498,7 +498,7 @@ age/size</td>
 </tr>
 <tr class="even">
 <td><strong>CRAN status</strong></td>
-<td>This submission</td>
+<td>On CRAN</td>
 <td>On CRAN</td>
 <td>Archived</td>
 </tr>
@@ -521,8 +521,11 @@ srvyr (Suggests)</td>
 <div id="reading-dbc-files" class="section level2">
 <h2>Reading DBC files</h2>
 <p>All three packages ultimately rely on Mark Adler’s <code>blast</code>
-decompressor for the PKWare DCL format used by DATASUS. The differences
-are in <em>how</em> the decompressed data is materialised in R:</p>
+decompressor for the PKWare DCL format used by DATASUS
+(<code>datasusr</code> on a Rust port of it, shared with the
+<code>datasus</code> command-line tool and the Python package
+<code>datasuspy</code>). The differences are in <em>how</em> the
+decompressed data is materialised in R:</p>
 <ul>
 <li><strong><code>microdatasus</code></strong> delegates to the
 <code>read.dbc</code> package, which writes a temporary
@@ -534,11 +537,12 @@ decompressor and parses fields into tidy tibbles per module. Each
 <code>&lt;module&gt;_data()</code> call applies the module’s specific
 cleaning/labelling rules.</li>
 <li><strong><code>datasusr</code></strong> decompresses and parses
-entirely in memory in a single C call. The compressed payload goes
-straight to a memory buffer and is parsed field-by-field into
-pre-allocated R vectors, with optional column selection,
+entirely in memory in a single call to compiled code. The compressed
+payload goes straight to a memory buffer and is parsed field-by-field
+into pre-allocated R vectors, with optional column selection,
 integer-vs-double inference, explicit <code>col_types</code>, and date
-parsing — all at the C level. There are no temporary files on disk.</li>
+parsing — all in compiled code. There are no temporary files on
+disk.</li>
 </ul>
 <p>For a single large DBC file with column selection,
 <code>datasusr</code> is the fastest option. For a multi-source analysis

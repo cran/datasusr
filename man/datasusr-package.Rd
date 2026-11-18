@@ -8,7 +8,7 @@
 \description{
 \if{html}{\figure{logo.svg}{options: style='float: right' alt='logo' width='120'}}
 
-Provides fast, in-memory reading of 'DATASUS' 'DBC' files using native 'C' code, along with a catalog of public health data sources, 'FTP' file discovery, caching downloads, and a high-level datasus_fetch() function that lists, downloads, and reads files in a single call. Bundles the 'blast' decompressor from 'zlib' contrib/blast to decode 'PKWare DCL' compressed 'DBC' files and parses 'DBF' records directly for efficient import into tibbles. See the 'DATASUS' file transfer site \url{https://datasus.saude.gov.br} and Adler (2003) \url{https://github.com/madler/zlib/tree/master/contrib/blast} for details on the underlying data and compression format.
+Provides fast, in-memory reading of 'DATASUS' 'DBC' files, along with a catalog of public health data sources, 'FTP' file discovery, caching downloads, and a high-level datasus_fetch() function that lists, downloads, and reads files in a single call. The reader is the 'Rust' crate 'datasus-core', bundled with the package: it decodes 'PKWare DCL' compressed 'DBC' files with a port of the 'blast' decompressor from 'zlib' contrib/blast and parses 'DBF' records directly for efficient import into tibbles. See the 'DATASUS' file transfer site \url{https://datasus.saude.gov.br} and Adler (2003) \url{https://github.com/madler/zlib/tree/master/contrib/blast} for details on the underlying data and compression format.
 }
 \seealso{
 Useful links:
@@ -20,20 +20,21 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Andre Leite \email{leite@castlab.org} (\href{https://orcid.org/0000-0002-4718-9766}{ORCID})
+\strong{Maintainer}: André Leite \email{leite@castlab.org} (\href{https://orcid.org/0000-0002-4718-9766}{ORCID})
 
 Authors:
 \itemize{
-  \item Andre Leite \email{leite@castlab.org} (\href{https://orcid.org/0000-0002-4718-9766}{ORCID})
-  \item Marcos Wasiliew \email{marcos.wasilew@gmail.com} (\href{https://orcid.org/0009-0004-4694-3159}{ORCID})
+  \item André Leite \email{leite@castlab.org} (\href{https://orcid.org/0000-0002-4718-9766}{ORCID})
+  \item Marcos Wasiliew \email{marcos.wasiliew@gmail.com} (\href{https://orcid.org/0009-0004-4694-3159}{ORCID})
   \item Hugo Vasconcelos \email{hugo.vasconcelos@ufpe.br} (\href{https://orcid.org/0000-0001-6249-0920}{ORCID})
   \item Carlos Amorim \email{carlos.agaf@ufpe.br} (\href{https://orcid.org/0000-0001-6315-8305}{ORCID})
   \item Diogo Bezerra \email{diogo.bezerra@ufpe.br} (\href{https://orcid.org/0000-0002-1216-8674}{ORCID})
+  \item Júlia Nascimento Barreto \email{juliabarreto@gd.seplag.pe.gov.br} (\href{https://orcid.org/0009-0004-2851-7770}{ORCID})
 }
 
 Other contributors:
 \itemize{
-  \item Mark Adler (Author of bundled blast.c and blast.h from zlib contrib/blast) [contributor, copyright holder]
+  \item Mark Adler (Author of blast.c from zlib contrib/blast, which the bundled Rust decompressor is a port of) [contributor, copyright holder]
 }
 
 }
